@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import ReactPlayer from "react-player";
 import "./App.css";
 
 const images = [
@@ -20,6 +21,9 @@ function App() {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [isImageEnlarged, setIsImageEnlarged] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
+  const [videoFile, setVideoFile] = useState(null);
+  const [thumbnail, setThumbnail] = useState(null);
+  const videoRef = useRef(null);
 
   const openImagePopup = (image, index) => {
     setSelectedImage(image);
@@ -81,8 +85,38 @@ function App() {
     };
   }, [closeImagePopup, previousImage, nextImage]);
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === "video/mp4") {
+      setVideoFile(URL.createObjectURL(file));
+      generateThumbnail(file);
+    } else {
+      alert("Please upload a valid MP4 video file.");
+    }
+  };
+
+  const generateThumbnail = (file) => {
+    const videoElement = document.createElement("video");
+    videoElement.src = URL.createObjectURL(file);
+
+    videoElement.addEventListener("loadeddata", () => {
+      if (videoElement.readyState >= 2) {
+        const canvas = document.createElement("canvas");
+        canvas.width = 320; // Set your desired width
+        canvas.height = 180; // Set your desired height
+        const context = canvas.getContext("2d");
+        context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+        const thumbnailUrl = canvas.toDataURL("image/png");
+        setThumbnail(thumbnailUrl);
+        videoElement.pause();
+        URL.revokeObjectURL(videoElement.src); // Clean up
+      }
+    });
+  };
+
   return (
     <div className="app">
+      <input type="file" accept="video/mp4" onChange={handleFileChange} />
       <div className={`title ${isImageEnlarged ? "hidden" : ""}`}>
         My Image Gallery
       </div>
@@ -100,13 +134,13 @@ function App() {
       {selectedImage && (
         <div className="image-popup">
           {isVideo ? (
-            <video
-              src={selectedImage}
-              alt=""
+            <ReactPlayer
+              url={selectedImage}
+              controls={true}
+              ref={videoRef}
               style={{ transform: `scale(${zoomLevel})` }}
-              autoPlay
-              controls
-              preload="metadata"
+              width="90%"
+              height="90%"
             />
           ) : (
             <img
@@ -121,6 +155,18 @@ function App() {
           <button className="zoom-out" onClick={zoomOut}>
             -
           </button>
+        </div>
+      )}
+      {videoFile && (
+        <div>
+          <h3>Uploaded Video Preview:</h3>
+          <ReactPlayer url={videoFile} controls={true} />
+          {thumbnail && (
+            <div>
+              <h3>Thumbnail:</h3>
+              <img src={thumbnail} alt="Video Thumbnail" />
+            </div>
+          )}
         </div>
       )}
     </div>

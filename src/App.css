@@ -10,7 +10,7 @@
 }
 
 .title {
-  position: flexible; /* Make the title fixed at the top */
+  position: fixed; /* Make the title fixed at the top */
   top: 0;
   left: 0;
   right: 0;
@@ -35,10 +35,8 @@
   max-width: 1300px;
   margin: 0 auto;
   padding-top: 40px;
-  /* Calculate the height based on the viewport height, minus the title and padding */
   height: calc(120vh - 40px - 20px - 40px);
   overflow-y: auto;
-  /* Add this to make the grid rows wrap to the next line */
   grid-auto-rows: minmax(240px, auto);
 }
 
