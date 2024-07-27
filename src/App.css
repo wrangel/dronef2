@@ -1,0 +1,95 @@
+.app {
+  background-color: #000; /* Black background */
+  display: flex;
+  flex-direction: column; /* Add flex-direction: column */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 0 10px; /* Add 10px padding to the left and right sides */
+  overflow-y: auto; /* Add vertical scroll */
+}
+
+.title {
+  position: flexible; /* Make the title fixed at the top */
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #000; /* Match the background color */
+  color: #fff; /* White text color */
+  padding: 10px; /* Add some padding */
+  text-align: center; /* Center the text */
+  z-index: 1; /* Make sure it's on top of the grid */
+  font-size: 36px; /* Increase the font size to 36 pixels */
+  margin-bottom: 20px; /* Add some margin below the title */
+  transition: opacity 0.3s; /* Add transition effect */
+}
+
+.title.hidden {
+  opacity: 0; /* Make the title invisible when the image is enlarged */
+}
+
+.masonry {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-top: 40px;
+  /* Calculate the height based on the viewport height, minus the title and padding */
+  height: calc(120vh - 40px - 20px - 40px);
+  overflow-y: auto;
+  /* Add this to make the grid rows wrap to the next line */
+  grid-auto-rows: minmax(240px, auto);
+}
+
+.masonry-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.masonry-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.image-popup img {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.image-popup button {
+  position: absolute;
+  cursor: pointer;
+  z-index: 1;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  color: #fff;
+}
+
+.image-popup .prev {
+  left: calc(50% - 45%);
+}
+
+.image-popup .next {
+  right: calc(50% - 45%);
+}
+
+.image-popup video {
+  max-width: 90%;
+  max-height: 90%;
+}
